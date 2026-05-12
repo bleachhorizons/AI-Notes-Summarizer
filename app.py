@@ -3,8 +3,7 @@ import json
 import gradio as gr
 from openai import OpenAI
 
-# Initialize using the environment variable
-# If it's missing, it will raise an error so you know immediately
+# Initialization
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("OPENAI_API_KEY environment variable is not set. Export it in Terminal first.")
@@ -32,14 +31,14 @@ Text:
             input=prompt
         )
         
-        # Clean the response to ensure it's valid JSON
+        # Clean response to ensure it's valid JSON
         raw = response.output_text.strip()
         if raw.startswith("```json"):
             raw = raw.replace("```json", "").replace("```", "")
         
         data = json.loads(raw)
         
-        # Format the lists into bullet points
+        # Format lists into bullet points
         summary = data.get("summary", "No summary available.")
         key_points = "\n".join([f"• {p}" for p in data.get("key_points", [])])
         questions = "\n".join([f"• {q}" for q in data.get("questions", [])])
